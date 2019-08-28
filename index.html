@@ -25,19 +25,18 @@
       <div class="card-header bg-primary text-center">Broker</div>
         <div class="card-body">
             Address: 
-            <input type="text" placeholder="Broker Adress" class="form-control-sm" id="brokerAddress" value="ws://broker.hivemq.com:8000/mqtt"><br>
+            <input type="text" placeholder="Broker Adress" class="form-control-sm col" id="brokerAddress" value="ws://broker.hivemq.com:8000/mqtt"><br>
             <br>
             <button type="button" class="btn btn-primary" id="btnConnect">Connect</button>
             <button type="button" class="btn btn-danger" id="btnDisconnect">Disconnect</button><br>
             <br>
-            Status: <input type="text" class="form-control-sm" id="status" readonly><br>
-            <br>
-            <table class="table tabl-bordered" id="brokerTopics">
+            Status: <input type="text" class="form-control-sm col border-0 text-center" id="status" readonly>
+            <table class="table table-bordered" id="brokerTopics">
                 <thead>
                   <tr>
                     <th>Topic</th>
                     <th>Payload</th>
-                    <th>Time Stamp</th>
+                    <th>Time</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -50,20 +49,20 @@
     <div class="card">
         <div class="card-header bg-primary text-center">Publish</div>
           <div class="card-body">
-            Topic: <input type="text" placeholder="Topic" class="form-control-sm" id="topic"><br>
+            Topic: <input type="text" placeholder="Topic" class="form-control-sm col" id="topic"><br>
             <br>
-            Payload: <input type="text" placeholder="Payload" class="form-control-sm" id="payload"><br>
+            Payload: <input type="text" placeholder="Payload" class="form-control-sm col" id="payload"><br>
             <br>
             <button type="button" class="btn btn-primary" id="btnPublish">Publish</button>
         </div>
      
         <div class="container">
-            <table class="table tabl-bordered" id="publishTopics">
+            <table class="table table-bordered" id="publishTopics">
               <thead>
                 <tr>
                   <th>Topic</th>
                   <th>Payload</th>
-                  <th>Time Stamp</th>
+                  <th>Time</th>
                 </tr>
               </thead>
               <tbody>
@@ -76,17 +75,17 @@
     <div class="card">
         <div class="card-header bg-primary text-center">Subscribe</div>
           <div class="card-body">
-            Topic: <input type="text" placeholder="Topic" class="form-control-sm" id="topicSubscribe"><br>
+            Topic: <input type="text" placeholder="Topic" class="form-control-sm col" id="topicSubscribe"><br>
             <br>
             <button type="button" class="btn btn-primary" id="btnSubscribe">Subscribe</button>
             <button type="button" class="btn btn-warning" id="btnUnSubscribe">Unsubscribe</button>
           </div>
           <div class="container">
-            <table class="table tabl-bordered" id="subscribeTopics">
+            <table class="table table-bordered" id="subscribeTopics">
               <thead>
                 <tr>
                   <th>Topic</th>
-                  <th>Time Stamp</th>
+                  <th>Time</th>
                 </tr>
               </thead>
               <tbody>

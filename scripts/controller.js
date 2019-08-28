@@ -3,21 +3,24 @@ $(document).ready(function () {
   var broker = $("#brokerAddress").val();
   var payload = $("#payload");
   var topic = $("#topic");
-  var topicSubscribe =  $("#topicSubscribe");
+  var topicSubscribe = $("#topicSubscribe");
   var timestamp = new Date($.now());
+  var subscribedTopics = [];
 
 
   $("#btnConnect").click(function () {
     // basic functionalities
     client = mqtt.connect(broker);
-  
+
     client.on("connect", function () {
       $("#status").val("Connected");
+
+
     });
 
   });
 
-  $("#btnDisconnect").click(function(){
+  $("#btnDisconnect").click(function () {
     client.end();
     $("#status").val("Disconnected");
   })
@@ -26,7 +29,7 @@ $(document).ready(function () {
     client.publish(topic.val(), payload.val());
     $("#publishTopics tbody").append("<tr> <td>" + topic.val() + "</td>" +
       "<td>" + payload.val() + "</td>" +
-      "<td>" +timestamp.toUTCString()+ "</td>" +
+      "<td>" + timestamp.toUTCString() + "</td>" +
       "</tr>"
     );
 
@@ -35,19 +38,20 @@ $(document).ready(function () {
 
   $("#btnSubscribe").click(function () {
     client.subscribe(topicSubscribe.val());
-    
+    subscribedTopics.push(topic.val());
+    alert(subscribedTopics[0])
     client.on("message", function (topic, payload) {
       console.log([topic, payload].join(": "));
     });
 
     $("#subscribeTopics tbody").append("<tr> <td>" + topicSubscribe.val() + "</td>" +
-    "<td>" +timestamp.toUTCString()+ "</td>" +
-    "</tr>"
-  );
+      "<td>" + timestamp.toUTCString() + "</td>" +
+      "</tr>"
+    );
 
   });
 
-  $("#btnUnSubscribe").click(function(){
+  $("#btnUnSubscribe").click(function () {
     client.unsubscribe(topic.val());
 
   })

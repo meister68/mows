@@ -5,7 +5,10 @@ $(document).ready(function () {
   var topic = $("#topic");
   var topicSubscribe = $("#topicSubscribe");
   var timestamp = new Date($.now());
-  var subscribedTopics = [];
+  var arrSubTopics = [];
+  var arrPubTopics = [];
+  var  index;
+  
 
 
   $("#btnConnect").click(function () {
@@ -14,8 +17,6 @@ $(document).ready(function () {
 
     client.on("connect", function () {
       $("#status").val("Connected");
-
-
     });
 
   });
@@ -23,23 +24,25 @@ $(document).ready(function () {
   $("#btnDisconnect").click(function () {
     client.end();
     $("#status").val("Disconnected");
-  })
+  });
 
   $("#btnPublish").click(function () {
+    arrPubTopics.push(topic.val());
     client.publish(topic.val(), payload.val());
     $("#publishTopics tbody").append("<tr> <td>" + topic.val() + "</td>" +
       "<td>" + payload.val() + "</td>" +
       "<td>" + timestamp.toUTCString() + "</td>" +
       "</tr>"
     );
+    check();
 
 
   });
 
   $("#btnSubscribe").click(function () {
     client.subscribe(topicSubscribe.val());
-    subscribedTopics.push(topic.val());
-    alert(subscribedTopics[0])
+    arrSubTopics.push(topicSubscribe.val());
+
     client.on("message", function (topic, payload) {
       console.log([topic, payload].join(": "));
     });
@@ -52,9 +55,21 @@ $(document).ready(function () {
   });
 
   $("#btnUnSubscribe").click(function () {
-    client.unsubscribe(topic.val());
+    client.unsubscribe(topicSubscribe.val());
+    index = arrSubTopics.indexOf(topicSubscribe.val());
+    arrSubTopics.splice(index);
+    
 
   })
+
+  var check = function () {
+    if (arrSubTopics.includes(topic.val()) && arrPubTopics.includes(topic.val())) {
+      $("#brokerTopics").append("<tr> <td>" + topic.val() + "</td>" +
+        "<td>" + payload.val() + "</td>" +
+        "<td>" + timestamp.toUTCString() + "</td>");
+
+    };
+  }
 
 });
 

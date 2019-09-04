@@ -7,50 +7,69 @@ $(document).ready(function () {
   var timestamp = new Date($.now());
   var arrSubTopics = [];
   var arrPubTopics = [];
-  var  index;
-  
+  var index;
 
 
   $("#btnConnect").click(function () {
     // basic functionalities
     client = mqtt.connect(broker);
-
+    $("#status").val("Connecting .....");
+    $("#status").removeClass("bg-danger").removeClass("bg-success");
     client.on("connect", function () {
       $("#status").val("Connected");
+      $("#status").removeClass("bg-danger").addClass("bg-success");
+
     });
+    $(".btnSsecondary").attr("disabled", false);
 
   });
 
   $("#btnDisconnect").click(function () {
     client.end();
     $("#status").val("Disconnected");
+    $("#status").removeClass("bg-success").addClass("bg-danger");
+    $(".btnSsecondary").attr("disabled", true);
+
   });
 
   $("#btnPublish").click(function () {
-    arrPubTopics.push(topic.val());
-    client.publish(topic.val(), payload.val());
-    $("#publishTopics tbody").append("<tr> <td>" + topic.val() + "</td>" +
-      "<td>" + payload.val() + "</td>" +
-      "<td>" + timestamp.toUTCString() + "</td>" +
-      "</tr>"
-    );
-    check();
+    if (topic.val() === "") {
+      alert("Please enter a topic");
+    } else {
+      arrPubTopics.push(topic.val());
+      client.publish(topic.val(), payload.val());
+      $("#publishTopics tbody").append("<tr class='table-success'> <td>" + topic.val() + "</td>" +
+        "<td>" + payload.val() + "</td>" +
+        "<td>" + timestamp.toUTCString() + "</td>" +
+        "</tr>"
+      );
+      check();
+    }
 
 
   });
 
   $("#btnSubscribe").click(function () {
-    client.subscribe(topicSubscribe.val());
-    arrSubTopics.push(topicSubscribe.val());
+    if (topicSubscribe.val() === "") {
+      alert("Please enter a topic to subcribe")
+    } else {
+      client.subscribe(topicSubscribe.val());
+      client.on("message", function (topic, payload) {
+        console.log([topic, payload].join(": "));
+        $("#recievedTopics").append("<tr class='table-success'> <td>" + topic + "</td>" +
+          "<td>" + payload + "</td> <td>" + timestamp.toUTCString() + "</td>" +
+          "</tr>"
+        );
+      });
+      if (!arrSubTopics.includes(topicSubscribe.val())) {
+        $("#subscribeTopics tbody").append("<tr  class='table-success'> <td>" + topicSubscribe.val() + "</td>" +
+          "<td>" + timestamp.toUTCString() + "</td>" +
+          "</tr>"
+        );
+        arrSubTopics.push(topicSubscribe.val());
+      }
+    }
 
-    client.on("message", function (topic, payload) {
-      console.log([topic, payload].join(": "));
-    });
-
-    $("#subscribeTopics tbody").append("<tr> <td>" + topicSubscribe.val() + "</td>" +
-      "<td>" + timestamp.toUTCString() + "</td>" +
-      "</tr>"
-    );
 
   });
 
@@ -58,17 +77,19 @@ $(document).ready(function () {
     client.unsubscribe(topicSubscribe.val());
     index = arrSubTopics.indexOf(topicSubscribe.val());
     arrSubTopics.splice(index);
-    
+
 
   })
 
   var check = function () {
     if (arrSubTopics.includes(topic.val()) && arrPubTopics.includes(topic.val())) {
-      $("#brokerTopics").append("<tr> <td>" + topic.val() + "</td>" +
+
+      $("#brokerTopics").append("<tr  class='table-success'> <td>" + topic.val() + "</td>" +
         "<td>" + payload.val() + "</td>" +
         "<td>" + timestamp.toUTCString() + "</td>");
 
     };
+
   }
 
 });
